@@ -4,10 +4,64 @@ services:
   flask_app:
     build: .
     ports:
-      - "8099:8099"
+      - "9000:8099"
     environment:
-      DB_HOST: 10.0.2.15
+      DB_HOST: db
+      DB_PORT: 3306
       DB_USER: satya
       DB_PASSWORD: Shiva@1192
       DB_NAME: student
+    depends_on:
+      - db
     restart: unless-stopped
+    command: python main.py
+    networks:
+      - backend
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: Shiva@1192
+      MYSQL_DATABASE: student
+      MYSQL_USER: satya
+      MYSQL_PASSWORD: Shiva@1192
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  dbdata:
+
+networks:
+  backend:
+
+# version: '3.8'
+# services:
+#   db:
+#     image: mysql:8.0
+#     environment:
+#       MYSQL_ROOT_PASSWORD: rootpassword
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     networks:
+#       - app_network
+
+#   flask_app:
+#     build: .
+#     depends_on:
+#       - db
+#     networks:
+#       - app_network
+#     environment:
+#       - DB_HOST=db
+#       - DB_PORT=3306
+#       - DB_USER=root
+#       - DB_PASSWORD=rootpassword
+
+# networks:
+#   app_network:
+
+# volumes:
+#   db_data:
+
